@@ -449,6 +449,39 @@ a:hover {
   color: var(--taupe);
 }
 
+/* Instagram */
+.instagram-intro {
+  max-width: 34rem;
+  margin-bottom: 2.5rem;
+}
+
+.instagram-grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: 1fr;
+}
+
+.instagram-embed {
+  width: 100%;
+  min-height: 48rem;
+  height: 52rem;
+  border: 0;
+  overflow: hidden;
+  background: var(--cream-deep);
+}
+
+@media (min-width: 760px) {
+  .instagram-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .instagram-embed {
+    min-height: 44rem;
+    height: 48rem;
+  }
+}
+
 /* Benefits */
 .benefits-intro {
   max-width: 34rem;
