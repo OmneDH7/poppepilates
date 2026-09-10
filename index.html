@@ -45,8 +45,8 @@
     <div class="mobile-nav" id="mobile-nav" data-mobile-nav hidden>
       <a href="#about">About</a>
       <a href="#benefits">Benefits</a>
-      <a href="#brands">Brands</a>
-      <a href="#teams">Companies</a>
+      <a href="#events">Events</a>
+      <a href="#corporate">Corporate</a>
       <a href="#contact">Contact</a>
       <a class="mobile-cta" href="#contact">Book a Session</a>
     </div>
@@ -161,6 +161,7 @@
             <li class="reveal" data-reveal>
               Develop body awareness and movement quality
             </li>
+            <li class="reveal" data-reveal>Support physical and mental health</li>
           </ul>
           <p class="personalized reveal" data-reveal>
             Whether you&rsquo;re new to Pilates or have years of experience, every
@@ -241,7 +242,7 @@
           >
             <input type="hidden" name="_subject" value="New inquiry from Poppe Pilates website" />
             <input type="hidden" name="_template" value="table" />
-            <input type="hidden" name="_captcha" value="true" />
+            <input type="hidden" name="_captcha" value="false" />
             <input type="text" name="_honey" class="honey" tabindex="-1" autocomplete="off" aria-hidden="true" />
 
             <label>
@@ -270,6 +271,33 @@
               <span>Message</span>
               <textarea name="message" rows="5" required placeholder="Tell me a little about what you&rsquo;re looking for"></textarea>
             </label>
+
+            <div class="captcha-field">
+              <label for="captcha-input">
+                <span
+                  >Captcha: what is
+                  <span data-captcha-a></span> + <span data-captcha-b></span>?</span
+                >
+              </label>
+              <input
+                id="captcha-input"
+                type="text"
+                name="captcha"
+                data-captcha-input
+                required
+                inputmode="numeric"
+                autocomplete="off"
+                placeholder="Enter the answer"
+                aria-describedby="captcha-error"
+              />
+              <p
+                class="captcha-error"
+                id="captcha-error"
+                data-captcha-error
+                role="alert"
+                aria-live="assertive"
+              ></p>
+            </div>
 
             <label class="consent">
               <input type="checkbox" name="privacy_consent" value="yes" required />

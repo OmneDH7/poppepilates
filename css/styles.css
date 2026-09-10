@@ -342,6 +342,7 @@ a:hover {
 /* Sections */
 .section {
   padding: clamp(4.5rem, 12vw, 7.5rem) 0;
+  scroll-margin-top: calc(var(--header-h) + 0.75rem);
 }
 
 .section-inner {
@@ -629,6 +630,7 @@ a:hover {
 }
 
 .contact-form {
+  position: relative;
   margin: 2.75rem auto 0;
   width: min(28rem, 100%);
   display: grid;
@@ -729,6 +731,24 @@ a:hover {
 
 .contact-form .consent a {
   text-underline-offset: 0.18em;
+}
+
+.contact-form .captcha-field {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.contact-form .captcha-error {
+  display: none;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #8a4a3a;
+}
+
+.contact-form .captcha-error.is-visible {
+  display: block;
 }
 
 .contact-form .honey {

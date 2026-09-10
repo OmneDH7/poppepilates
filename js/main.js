@@ -65,4 +65,68 @@
   document.querySelectorAll(".hero [data-reveal]").forEach((el) => {
     requestAnimationFrame(() => el.classList.add("is-visible"));
   });
+
+  const form = document.querySelector(".contact-form");
+  const captchaA = document.querySelector("[data-captcha-a]");
+  const captchaB = document.querySelector("[data-captcha-b]");
+  const captchaInput = document.querySelector("[data-captcha-input]");
+  const captchaError = document.querySelector("[data-captcha-error]");
+  let captchaAnswer = null;
+  let suppressCaptchaInputClear = false;
+
+  const showCaptchaError = (message) => {
+    if (captchaError) {
+      captchaError.textContent = message;
+      captchaError.classList.add("is-visible");
+    }
+    if (captchaInput) {
+      captchaInput.setCustomValidity(message);
+      captchaInput.reportValidity();
+    }
+  };
+
+  const clearCaptchaError = () => {
+    if (captchaError) {
+      captchaError.textContent = "";
+      captchaError.classList.remove("is-visible");
+    }
+    captchaInput?.setCustomValidity("");
+  };
+
+  const refreshCaptcha = () => {
+    if (!captchaA || !captchaB || !captchaInput) return;
+    const a = Math.floor(Math.random() * 8) + 2;
+    const b = Math.floor(Math.random() * 8) + 2;
+    captchaAnswer = a + b;
+    captchaA.textContent = String(a);
+    captchaB.textContent = String(b);
+    suppressCaptchaInputClear = true;
+    captchaInput.value = "";
+    suppressCaptchaInputClear = false;
+  };
+
+  refreshCaptcha();
+  clearCaptchaError();
+
+  captchaInput?.addEventListener("input", () => {
+    if (!suppressCaptchaInputClear) clearCaptchaError();
+  });
+
+  form?.addEventListener("submit", (event) => {
+    if (!captchaInput || captchaAnswer === null) {
+      event.preventDefault();
+      showCaptchaError("Please solve the captcha to send your message.");
+      return;
+    }
+
+    const value = Number.parseInt(String(captchaInput.value).trim(), 10);
+    if (!Number.isFinite(value) || value !== captchaAnswer) {
+      event.preventDefault();
+      refreshCaptcha();
+      showCaptchaError("Incorrect captcha. Please try again.");
+      return;
+    }
+
+    clearCaptchaError();
+  });
 })();
