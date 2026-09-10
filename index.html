@@ -237,13 +237,13 @@
           <form
             class="contact-form reveal"
             data-reveal
+            data-contact-form
             action="https://formsubmit.co/camille@poppepilates.com"
             method="POST"
           >
             <input type="hidden" name="_subject" value="New inquiry from Poppe Pilates website" />
             <input type="hidden" name="_template" value="table" />
             <input type="hidden" name="_captcha" value="false" />
-            <input type="text" name="_honey" class="honey" tabindex="-1" autocomplete="off" aria-hidden="true" />
 
             <label>
               <span>Name</span>
@@ -276,13 +276,13 @@
               <label for="captcha-input">
                 <span
                   >Captcha: what is
-                  <span data-captcha-a></span> + <span data-captcha-b></span>?</span
+                  <span data-captcha-a>?</span> + <span data-captcha-b>?</span>?</span
                 >
               </label>
               <input
                 id="captcha-input"
                 type="text"
-                name="captcha"
+                name="captcha_check"
                 data-captcha-input
                 required
                 inputmode="numeric"
@@ -291,7 +291,7 @@
                 aria-describedby="captcha-error"
               />
               <p
-                class="captcha-error"
+                class="form-feedback form-feedback-error"
                 id="captcha-error"
                 data-captcha-error
                 role="alert"
@@ -309,7 +309,15 @@
               >
             </label>
 
-            <button class="btn btn-primary" type="submit">Send message</button>
+            <button class="btn btn-primary" type="submit" data-contact-submit>
+              Send message
+            </button>
+            <p
+              class="form-feedback form-feedback-status"
+              data-form-status
+              role="status"
+              aria-live="polite"
+            ></p>
           </form>
         </div>
       </section>

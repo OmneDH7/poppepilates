@@ -738,26 +738,27 @@ a:hover {
   gap: 0.45rem;
 }
 
-.contact-form .captcha-error {
-  display: none;
+.contact-form .form-feedback {
   margin: 0;
+  min-height: 1.25rem;
   font-family: var(--font-display);
   font-size: 0.95rem;
   line-height: 1.4;
+}
+
+.contact-form .form-feedback-error.is-error,
+.contact-form .form-feedback.is-error {
   color: #8a4a3a;
 }
 
-.contact-form .captcha-error.is-visible {
-  display: block;
+.contact-form .form-feedback.is-success {
+  color: #4f6b4c;
 }
 
-.contact-form .honey {
-  position: absolute;
-  left: -9999px;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  pointer-events: none;
+.contact-form .btn-primary:disabled {
+  opacity: 0.7;
+  cursor: wait;
+  transform: none;
 }
 
 /* Legal */

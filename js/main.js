@@ -61,72 +61,113 @@
     reveals.forEach((el) => el.classList.add("is-visible"));
   }
 
-  // Hero text should appear immediately on load
   document.querySelectorAll(".hero [data-reveal]").forEach((el) => {
     requestAnimationFrame(() => el.classList.add("is-visible"));
   });
 
-  const form = document.querySelector(".contact-form");
+  const form = document.querySelector("[data-contact-form]");
   const captchaA = document.querySelector("[data-captcha-a]");
   const captchaB = document.querySelector("[data-captcha-b]");
   const captchaInput = document.querySelector("[data-captcha-input]");
   const captchaError = document.querySelector("[data-captcha-error]");
-  let captchaAnswer = null;
-  let suppressCaptchaInputClear = false;
+  const formStatus = document.querySelector("[data-form-status]");
+  const submitButton = document.querySelector("[data-contact-submit]");
+  let captchaAnswer = 0;
 
-  const showCaptchaError = (message) => {
-    if (captchaError) {
-      captchaError.textContent = message;
-      captchaError.classList.add("is-visible");
-    }
-    if (captchaInput) {
-      captchaInput.setCustomValidity(message);
-      captchaInput.reportValidity();
-    }
+  const setStatus = (message, type) => {
+    if (!formStatus) return;
+    formStatus.textContent = message;
+    formStatus.classList.remove("is-error", "is-success");
+    if (type) formStatus.classList.add(type);
   };
 
-  const clearCaptchaError = () => {
-    if (captchaError) {
-      captchaError.textContent = "";
-      captchaError.classList.remove("is-visible");
-    }
-    captchaInput?.setCustomValidity("");
+  const setCaptchaError = (message) => {
+    if (!captchaError) return;
+    captchaError.textContent = message || "";
+    captchaError.classList.toggle("is-error", Boolean(message));
   };
 
   const refreshCaptcha = () => {
-    if (!captchaA || !captchaB || !captchaInput) return;
+    if (!captchaA || !captchaB) return;
     const a = Math.floor(Math.random() * 8) + 2;
     const b = Math.floor(Math.random() * 8) + 2;
     captchaAnswer = a + b;
     captchaA.textContent = String(a);
     captchaB.textContent = String(b);
-    suppressCaptchaInputClear = true;
-    captchaInput.value = "";
-    suppressCaptchaInputClear = false;
+    if (captchaInput) captchaInput.value = "";
   };
 
   refreshCaptcha();
-  clearCaptchaError();
 
   captchaInput?.addEventListener("input", () => {
-    if (!suppressCaptchaInputClear) clearCaptchaError();
+    setCaptchaError("");
+    setStatus("", "");
   });
 
-  form?.addEventListener("submit", (event) => {
-    if (!captchaInput || captchaAnswer === null) {
-      event.preventDefault();
-      showCaptchaError("Please solve the captcha to send your message.");
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    setStatus("", "");
+    setCaptchaError("");
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
       return;
     }
 
-    const value = Number.parseInt(String(captchaInput.value).trim(), 10);
+    const value = Number.parseInt(String(captchaInput?.value || "").trim(), 10);
     if (!Number.isFinite(value) || value !== captchaAnswer) {
-      event.preventDefault();
+      setCaptchaError("Incorrect captcha. Please try again.");
       refreshCaptcha();
-      showCaptchaError("Incorrect captcha. Please try again.");
+      captchaInput?.focus();
       return;
     }
 
-    clearCaptchaError();
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = "Sending...";
+    }
+
+    const endpoint =
+      form.getAttribute("action")?.replace(
+        "https://formsubmit.co/",
+        "https://formsubmit.co/ajax/"
+      ) || "https://formsubmit.co/ajax/camille@poppepilates.com";
+
+    const body = new FormData(form);
+    body.delete("captcha_check");
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        body,
+        headers: { Accept: "application/json" },
+      });
+
+      const payload = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(payload.message || "Could not send your message.");
+      }
+
+      form.reset();
+      refreshCaptcha();
+      setStatus(
+        "Thank you — your message was sent. Camille will get back to you soon.",
+        "is-success"
+      );
+    } catch (error) {
+      setStatus(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please email camille@poppepilates.com.",
+        "is-error"
+      );
+      refreshCaptcha();
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = "Send message";
+      }
+    }
   });
 })();
