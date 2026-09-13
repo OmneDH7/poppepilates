@@ -650,7 +650,7 @@ a:hover {
   color: var(--taupe-soft);
 }
 
-.contact-form input,
+.contact-form input:not([type="checkbox"]),
 .contact-form select,
 .contact-form textarea {
   width: 100%;
@@ -681,7 +681,7 @@ a:hover {
   line-height: 1.5;
 }
 
-.contact-form input:focus,
+.contact-form input:not([type="checkbox"]):focus,
 .contact-form select:focus,
 .contact-form textarea:focus {
   border-color: var(--taupe);
@@ -715,10 +715,19 @@ a:hover {
   color: var(--taupe);
 }
 
-.contact-form .consent input {
-  width: auto;
-  margin-top: 0.2rem;
+.contact-form .consent input[type="checkbox"] {
+  appearance: auto;
+  -webkit-appearance: checkbox;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin: 0.2rem 0 0;
+  padding: 0;
+  border: 1px solid var(--taupe);
+  border-radius: 0.15rem;
+  background: var(--white);
   accent-color: var(--taupe);
+  cursor: pointer;
+  flex: 0 0 auto;
 }
 
 .contact-form .consent span {
