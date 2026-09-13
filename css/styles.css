@@ -744,6 +744,7 @@ a:hover {
   font-family: var(--font-display);
   font-size: 0.95rem;
   line-height: 1.4;
+  color: var(--taupe);
 }
 
 .contact-form .form-feedback-error.is-error,

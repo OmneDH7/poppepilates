@@ -97,6 +97,61 @@
     if (captchaInput) captchaInput.value = "";
   };
 
+  const getFieldValue = (name) => {
+    const field = form?.elements?.namedItem(name);
+    if (!field) return "";
+    if (field instanceof RadioNodeList) return String(field.value || "").trim();
+    return String(field.value || "").trim();
+  };
+
+  const validateForm = () => {
+    setCaptchaError("");
+    setStatus("", "");
+
+    if (!getFieldValue("name")) {
+      setStatus("Please enter your name.", "is-error");
+      form?.elements?.namedItem("name")?.focus?.();
+      return false;
+    }
+
+    const email = getFieldValue("email");
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setStatus("Please enter a valid email address.", "is-error");
+      form?.elements?.namedItem("email")?.focus?.();
+      return false;
+    }
+
+    if (!getFieldValue("interest")) {
+      setStatus("Please select what you are interested in.", "is-error");
+      form?.elements?.namedItem("interest")?.focus?.();
+      return false;
+    }
+
+    if (!getFieldValue("message")) {
+      setStatus("Please enter a message.", "is-error");
+      form?.elements?.namedItem("message")?.focus?.();
+      return false;
+    }
+
+    const captchaValue = Number.parseInt(String(captchaInput?.value || "").trim(), 10);
+    if (!Number.isFinite(captchaValue) || captchaValue !== captchaAnswer) {
+      setCaptchaError("Incorrect captcha. Please try again.");
+      setStatus("Please solve the captcha correctly.", "is-error");
+      refreshCaptcha();
+      captchaInput?.focus();
+      return false;
+    }
+
+    const consent = form?.elements?.namedItem("privacy_consent");
+    if (!(consent instanceof HTMLInputElement) || !consent.checked) {
+      setStatus("Please agree to the Privacy Policy to continue.", "is-error");
+      consent?.focus?.();
+      return false;
+    }
+
+    return true;
+  };
+
   refreshCaptcha();
 
   captchaInput?.addEventListener("input", () => {
@@ -106,26 +161,14 @@
 
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
-    setStatus("", "");
-    setCaptchaError("");
 
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
-
-    const value = Number.parseInt(String(captchaInput?.value || "").trim(), 10);
-    if (!Number.isFinite(value) || value !== captchaAnswer) {
-      setCaptchaError("Incorrect captcha. Please try again.");
-      refreshCaptcha();
-      captchaInput?.focus();
-      return;
-    }
+    if (!validateForm()) return;
 
     if (submitButton) {
       submitButton.disabled = true;
       submitButton.textContent = "Sending...";
     }
+    setStatus("Sending your message...", "");
 
     const endpoint =
       form.getAttribute("action")?.replace(
